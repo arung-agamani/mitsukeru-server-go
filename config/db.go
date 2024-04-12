@@ -11,7 +11,7 @@ type DbConfig struct {
 	DatabasePass string
 }
 
-func NewDbConfig(dbType string, dbLink string) DbConfig {
+func NewDbConfig() DbConfig {
 	checkConfigKey("DB_TYPE", true)
 	checkConfigKey("DB_LINK", true)
 	checkConfigKey("DB_PORT", true)

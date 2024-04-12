@@ -31,7 +31,7 @@ func InitConfig() {
 		Port:        GetPort(),
 		Environment: GetEnvironment(),
 		Version:     GetVersion(),
-		DbConfig:    NewDbConfig(viper.GetString("DB_TYPE"), viper.GetString("DB_LINK")),
+		DbConfig:    NewDbConfig(),
 	}
 
 }
