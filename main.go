@@ -7,6 +7,7 @@ import (
 	"github.com/arung-agamani/mitsukeru-go/controllers"
 	db2 "github.com/arung-agamani/mitsukeru-go/db"
 	"github.com/arung-agamani/mitsukeru-go/utils/logger"
+	"github.com/arung-agamani/mitsukeru-go/utils/validator"
 	"github.com/gorilla/mux"
 	"net/http"
 	"os"
@@ -20,10 +21,15 @@ func main() {
 	config.InitConfig()
 	logger.InitLogger()
 	db2.InitDb()
+	validator.Init()
 	router := mux.NewRouter()
 	router.HandleFunc("/", controllers.HelloHandler()).Methods(http.MethodGet)
 	router.HandleFunc("/info", controllers.InfoHandler()).Methods(http.MethodGet)
 	router.HandleFunc("/item/{itemId}", controllers.GetItemHandler()).Methods(http.MethodGet)
+	router.HandleFunc("/event", controllers.CreateEventHandler()).Methods(http.MethodPost)
+	router.HandleFunc("/event", controllers.DeleteEventHandler()).Methods(http.MethodDelete)
+	router.HandleFunc("/event/{eventId}", controllers.GetEventHandler()).Methods(http.MethodGet)
+	router.HandleFunc("/event/{eventId}", controllers.UpdateEventHandler()).Methods(http.MethodPost)
 	//router.HandleFunc("/event/{eventId}")
 
 	logger.Infof("Starting server at port %s", config.GetPort())

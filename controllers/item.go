@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/arung-agamani/mitsukeru-go/db"
 	"github.com/arung-agamani/mitsukeru-go/models"
+	"github.com/arung-agamani/mitsukeru-go/responses"
 	"github.com/arung-agamani/mitsukeru-go/utils/logger"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
@@ -19,26 +20,26 @@ func GetItemHandler() http.HandlerFunc {
 		var item models.LostItem
 		err := dbConn.First(&item, itemId).Error
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-			res := &ErrorResponse{
+			res := &responses.ErrorResponse{
 				Status:  404,
 				Message: "item not found",
 				Error:   nil,
 			}
-			ErrResponse(w, res)
+			responses.ErrResponse(w, res)
 		} else {
 			logger.Errorf("Unknown error: %v", err)
-			ErrResponse(w, &ErrorResponse{
+			responses.ErrResponse(w, &responses.ErrorResponse{
 				Status:  500,
 				Message: "Internal server error",
 				Error:   nil,
 			})
 		}
 
-		response := &Response{
+		response := &responses.Response{
 			Status:  200,
 			Message: "success",
 			Data:    item,
 		}
-		OkResponse(w, response)
+		responses.OkResponse(w, response)
 	}
 }

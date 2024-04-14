@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/arung-agamani/mitsukeru-go/config"
+	"github.com/arung-agamani/mitsukeru-go/responses"
 	"net/http"
 )
 
@@ -16,11 +17,11 @@ func InfoHandler() http.HandlerFunc {
 			Name:    config.GetAppName(),
 			Version: config.GetVersion(),
 		}
-		res := &Response{
+		res := &responses.Response{
 			Status:  200,
 			Message: "Info",
 			Data:    infoBody,
 		}
-		OkResponse(w, res)
+		responses.OkResponse(w, res)
 	}
 }

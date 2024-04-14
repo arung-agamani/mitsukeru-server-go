@@ -1,14 +1,17 @@
 package controllers
 
-import "net/http"
+import (
+	"github.com/arung-agamani/mitsukeru-go/responses"
+	"net/http"
+)
 
 func HelloHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := &Response{
+		res := &responses.Response{
 			Status:  200,
 			Message: "Awoo!",
 			Data:    nil,
 		}
-		OkResponse(w, res)
+		responses.OkResponse(w, res)
 	}
 }
