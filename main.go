@@ -27,7 +27,7 @@ func main() {
 	router.HandleFunc("/info", controllers.InfoHandler()).Methods(http.MethodGet)
 	router.HandleFunc("/item/{itemId}", controllers.GetItemHandler()).Methods(http.MethodGet)
 	router.HandleFunc("/event", controllers.CreateEventHandler()).Methods(http.MethodPost)
-	router.HandleFunc("/event", controllers.DeleteEventHandler()).Methods(http.MethodDelete)
+	router.HandleFunc("/event/{eventId}", controllers.DeleteEventHandler()).Methods(http.MethodDelete)
 	router.HandleFunc("/event/{eventId}", controllers.GetEventHandler()).Methods(http.MethodGet)
 	router.HandleFunc("/event/{eventId}", controllers.UpdateEventHandler()).Methods(http.MethodPost)
 	//router.HandleFunc("/event/{eventId}")

@@ -1,13 +1,16 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arung-agamani/mitsukeru-go/db"
 	"github.com/arung-agamani/mitsukeru-go/models"
 	"github.com/arung-agamani/mitsukeru-go/responses"
+	"github.com/arung-agamani/mitsukeru-go/utils/logger"
 	"github.com/arung-agamani/mitsukeru-go/utils/parser"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 	"net/http"
 	"time"
 )
@@ -21,6 +24,10 @@ type CreateEventRequestPayload struct {
 }
 
 type GetEventRequestPayload struct {
+	ID uuid.UUID `json:"id" validate:"required"`
+}
+
+type DeleteEventRequestPayload struct {
 	ID uuid.UUID `json:"id" validate:"required"`
 }
 
@@ -68,6 +75,7 @@ func CreateEventHandler() http.HandlerFunc {
 				Message: "Error when creating new event",
 				Error:   nil,
 			})
+			logger.Error("Error when creating new event: %s", createRes.Error.Error())
 			return
 		}
 		responses.OkResponse(w, &responses.Response{
@@ -81,9 +89,45 @@ func CreateEventHandler() http.HandlerFunc {
 
 func DeleteEventHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id, _ := uuid.Parse(vars["eventId"])
+		payload := DeleteEventRequestPayload{
+			ID: id,
+		}
+		if parser.ParseStructPayload(w, r, &payload) != true {
+			return
+		}
+		dbConn := db.GetDB()
+		event := models.Event{ID: payload.ID}
+		getRes := dbConn.Select("id").First(&event)
+		if getRes.Error != nil {
+			var errMsg string = "Error when getting event"
+			var status int = 500
+			if errors.Is(getRes.Error, gorm.ErrRecordNotFound) {
+				errMsg = "Record not found"
+				status = 404
+			}
+			responses.ErrResponse(w, &responses.ErrorResponse{
+				Status:  status,
+				Message: errMsg,
+				Error:   nil,
+			})
+			logger.Errorf("Error when getting event: %s", getRes.Error.Error())
+			return
+		}
+		delRes := dbConn.Delete(&event)
+		if delRes.Error != nil {
+			responses.ErrResponse(w, &responses.ErrorResponse{
+				Status:  500,
+				Message: "Error when deleting event",
+				Error:   nil,
+			})
+			logger.Error(fmt.Sprintf("Error when deleting event: %s", delRes.Error.Error()))
+			return
+		}
 		responses.OkResponse(w, &responses.Response{
 			Status:  200,
-			Message: "Dummy response",
+			Message: "Event has been deleted",
 			Data:    nil,
 		})
 	}
@@ -103,11 +147,18 @@ func GetEventHandler() http.HandlerFunc {
 		dbConn := db.GetDB()
 		getRes := dbConn.Select("name", "description", "start_date", "end_date", "location").First(&event)
 		if getRes.Error != nil {
+			var errMsg string = "Error when getting event"
+			var status int = 500
+			if errors.Is(getRes.Error, gorm.ErrRecordNotFound) {
+				errMsg = "Record not found"
+				status = 404
+			}
 			responses.ErrResponse(w, &responses.ErrorResponse{
-				Status:  500,
-				Message: "Error when getting event",
+				Status:  status,
+				Message: errMsg,
 				Error:   nil,
 			})
+			logger.Errorf("Error when getting event: %s", getRes.Error.Error())
 			return
 		}
 		res := GetEventResponsePayload{
@@ -119,7 +170,7 @@ func GetEventHandler() http.HandlerFunc {
 		}
 		responses.OkResponse(w, &responses.Response{
 			Status:  200,
-			Message: "Dummy response",
+			Message: "Event found",
 			Data:    res,
 		})
 	}
@@ -140,11 +191,18 @@ func UpdateEventHandler() http.HandlerFunc {
 		dbConn := db.GetDB()
 		getRes := dbConn.First(&event)
 		if getRes.Error != nil {
+			var errMsg string = "Error when getting event"
+			var status int = 500
+			if errors.Is(getRes.Error, gorm.ErrRecordNotFound) {
+				errMsg = "Record not found"
+				status = 404
+			}
 			responses.ErrResponse(w, &responses.ErrorResponse{
-				Status:  500,
-				Message: "Error when getting event",
+				Status:  status,
+				Message: errMsg,
 				Error:   nil,
 			})
+			logger.Errorf("Error when getting event: %s", getRes.Error.Error())
 			return
 		}
 		event.Name = payload.Name
