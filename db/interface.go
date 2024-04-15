@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arung-agamani/mitsukeru-go/config"
 	"github.com/arung-agamani/mitsukeru-go/models"
@@ -61,3 +62,14 @@ func AutoMigrate(db *gorm.DB) {
 }
 
 func GetDB() *gorm.DB { return db }
+
+func HandleError(err error) (bool, string) {
+	switch {
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		return false, "Record not found"
+	case errors.Is(err, gorm.ErrDuplicatedKey):
+		return false, "Duplicate key"
+	default:
+		return false, fmt.Sprintf("Unhandled error: %s", err.Error())
+	}
+}

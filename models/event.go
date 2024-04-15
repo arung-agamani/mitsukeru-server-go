@@ -15,7 +15,3 @@ type Event struct {
 	EndDate     time.Time `json:"endDate"`
 	Location    string    `json:"location"`
 }
-
-func NewEventType() Event {
-	return Event{}
-}
