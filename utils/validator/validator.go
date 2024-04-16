@@ -2,8 +2,9 @@ package validator
 
 import (
 	"errors"
-	"github.com/arung-agamani/mitsukeru-go/utils/logger"
+	"fmt"
 	"github.com/go-playground/validator/v10"
+	"strings"
 )
 
 var validate *validator.Validate
@@ -26,18 +27,62 @@ func Init() {
 	validate = validator.New()
 }
 
-func ValidateStruct(i interface{}) (bool, string) {
+type FieldError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
+
+func ValidateStruct(i interface{}) (bool, *[]FieldError) {
 	err := validate.Struct(i)
 	if err != nil {
 		var invalidValidationError *validator.InvalidValidationError
 		if errors.As(err, &invalidValidationError) {
-			return false, "Malformed input"
+			return false, nil
 		}
-
+		var ef []FieldError
 		for _, err := range err.(validator.ValidationErrors) {
-			logger.Errorf("Error on validation. %s : %s | %s | %s | %s", err.Field(), err.Error(), err.Param(), err.Kind(), err.Type())
+			//fmt.Printf("Error on validation. %s | %s | %s | %v | %v | %s | %s | %s | %s | %s | %s\n", err.Field(),
+			//	err.Error(), err.Param(), err.Kind(), err.Type(),
+			//	err.StructNamespace(), err.StructField(),
+			//	err.Tag(), err.ActualTag(), err.Value(), err.Namespace(),
+			//)
+			var msg string
+			if strings.TrimSpace(err.Param()) != "" {
+				msg = fmt.Sprintf("Input failed on tag `%s` with param `%s`", err.Tag(), err.Param())
+			} else {
+				msg = fmt.Sprintf("Input failed on condition `%s`", err.Tag())
+			}
+			ef = append(ef, FieldError{
+				Field:   err.Field(),
+				Message: msg,
+			})
 		}
-		return false, "Field validation error on [coming soon]"
+		return false, &ef
 	}
-	return true, ""
+	return true, nil
+}
+
+func ValidateVariable(i interface{}, rule string) (bool, *[]FieldError) {
+	err := validate.Var(i, rule)
+	if err != nil {
+		var invalidValidationError *validator.InvalidValidationError
+		if errors.As(err, &invalidValidationError) {
+			return false, nil
+		}
+		var ef []FieldError
+		for _, err := range err.(validator.ValidationErrors) {
+			var msg string
+			if strings.TrimSpace(err.Param()) != "" {
+				msg = fmt.Sprintf("Input failed on tag `%s` with param `%s`", err.Tag(), err.Param())
+			} else {
+				msg = fmt.Sprintf("Input failed on condition `%s`", err.Tag())
+			}
+			ef = append(ef, FieldError{
+				Field:   err.Field(),
+				Message: msg,
+			})
+		}
+		return false, &ef
+	}
+	return true, nil
 }

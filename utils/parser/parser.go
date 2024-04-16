@@ -20,6 +20,18 @@ func ParseStructPayload(w http.ResponseWriter, r *http.Request, target interface
 	return true
 }
 
+// ParseJSONPayload Parses request body as JSON request
+// and stores it in target variable. This function
+// is meant to be used in scope of HTTP request handler
+// Parameters :
+//
+//	w http.ResponseWriter: Response writer for the current request
+//	r *http.Request: Request object to the current request. Used to retrieve the request body
+//	target interface{}: Target object that will have its fields filled with info fron JSON request
+//
+// Returns :
+//
+//	bool: indicating if the parsing success
 func ParseJSONPayload(w http.ResponseWriter, r *http.Request, target interface{}) bool {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&target); err != nil {
