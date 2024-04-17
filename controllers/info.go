@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/arung-agamani/mitsukeru-go/config"
-	"github.com/arung-agamani/mitsukeru-go/responses"
+	"github.com/arung-agamani/mitsukeru-server-go/config"
+	"github.com/arung-agamani/mitsukeru-server-go/responses"
 	"net/http"
 )
 

@@ -2,9 +2,9 @@ package services
 
 import (
 	"errors"
-	"github.com/arung-agamani/mitsukeru-go/db"
-	"github.com/arung-agamani/mitsukeru-go/models"
-	"github.com/arung-agamani/mitsukeru-go/utils/validator"
+	"github.com/arung-agamani/mitsukeru-server-go/db"
+	"github.com/arung-agamani/mitsukeru-server-go/models"
+	"github.com/arung-agamani/mitsukeru-server-go/utils/validator"
 )
 
 type CreateItemTypePayload struct {

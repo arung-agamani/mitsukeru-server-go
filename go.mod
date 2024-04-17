@@ -1,4 +1,4 @@
-module github.com/arung-agamani/mitsukeru-go
+module github.com/arung-agamani/mitsukeru-server-go
 
 go 1.22.1
 

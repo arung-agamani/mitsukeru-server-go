@@ -3,8 +3,8 @@ package parser
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/arung-agamani/mitsukeru-go/responses"
-	"github.com/arung-agamani/mitsukeru-go/utils/validator"
+	"github.com/arung-agamani/mitsukeru-server-go/responses"
+	"github.com/arung-agamani/mitsukeru-server-go/utils/validator"
 	"net/http"
 )
 

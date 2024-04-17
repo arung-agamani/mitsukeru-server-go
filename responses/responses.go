@@ -2,7 +2,7 @@ package responses
 
 import (
 	"encoding/json"
-	"github.com/arung-agamani/mitsukeru-go/utils/logger"
+	"github.com/arung-agamani/mitsukeru-server-go/utils/logger"
 	"net/http"
 )
 

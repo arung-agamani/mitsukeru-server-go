@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"errors"
-	"github.com/arung-agamani/mitsukeru-go/db"
-	"github.com/arung-agamani/mitsukeru-go/models"
-	"github.com/arung-agamani/mitsukeru-go/responses"
-	"github.com/arung-agamani/mitsukeru-go/utils/logger"
+	"github.com/arung-agamani/mitsukeru-server-go/db"
+	"github.com/arung-agamani/mitsukeru-server-go/models"
+	"github.com/arung-agamani/mitsukeru-server-go/responses"
+	"github.com/arung-agamani/mitsukeru-server-go/utils/logger"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 	"net/http"

@@ -2,7 +2,7 @@ package db
 
 import (
 	"errors"
-	"github.com/arung-agamani/mitsukeru-go/models"
+	"github.com/arung-agamani/mitsukeru-server-go/models"
 	"gorm.io/gorm"
 )
 

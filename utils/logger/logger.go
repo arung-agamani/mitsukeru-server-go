@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/arung-agamani/mitsukeru-go/config"
+	"github.com/arung-agamani/mitsukeru-server-go/config"
 	"go.uber.org/zap"
 )
 

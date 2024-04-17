@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/arung-agamani/mitsukeru-go/models"
+	"github.com/arung-agamani/mitsukeru-server-go/models"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

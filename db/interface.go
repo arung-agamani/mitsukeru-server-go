@@ -3,9 +3,9 @@ package db
 import (
 	"errors"
 	"fmt"
-	"github.com/arung-agamani/mitsukeru-go/config"
-	"github.com/arung-agamani/mitsukeru-go/models"
-	"github.com/arung-agamani/mitsukeru-go/utils/logger"
+	"github.com/arung-agamani/mitsukeru-server-go/config"
+	"github.com/arung-agamani/mitsukeru-server-go/models"
+	"github.com/arung-agamani/mitsukeru-server-go/utils/logger"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
