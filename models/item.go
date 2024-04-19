@@ -10,7 +10,8 @@ type Item struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	ItemTypeID  string    `json:"typeID"`
+	ItemType    ItemType  `json:"itemType"`
+	Event       Event     `json:"event"`
 }
 
 type LostItem struct {
