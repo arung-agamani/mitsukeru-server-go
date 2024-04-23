@@ -14,3 +14,12 @@ func GetUser(id uuid.UUID, conn *gorm.DB) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func GetUserByUsername(username string, conn *gorm.DB) (*models.User, error) {
+	var user models.User
+	get := conn.Where("username = ?", username).First(&user)
+	if get.Error != nil {
+		return nil, get.Error
+	}
+	return &user, nil
+}
