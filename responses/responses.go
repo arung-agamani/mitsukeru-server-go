@@ -2,6 +2,8 @@ package responses
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/arung-agamani/mitsukeru-server-go/services"
 	"github.com/arung-agamani/mitsukeru-server-go/utils/logger"
 	"net/http"
 )
@@ -36,4 +38,21 @@ func ErrResponse(w http.ResponseWriter, response *ErrorResponse) {
 	}
 	w.WriteHeader(response.Status)
 	_, _ = w.Write(resJson)
+}
+
+func HandleError(w http.ResponseWriter, err error) {
+	if errors.Is(err, services.ValidatorError{}) {
+		ErrResponse(w, &ErrorResponse{
+			Status:  400,
+			Message: "Bad request",
+			Error:   err,
+		})
+		return
+	}
+	ErrResponse(w, &ErrorResponse{
+		Status:  500,
+		Message: "Internal server error",
+		Error:   err,
+	})
+	return
 }
