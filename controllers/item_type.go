@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"github.com/arung-agamani/mitsukeru-server-go/responses"
 	"github.com/arung-agamani/mitsukeru-server-go/services"
 	"github.com/arung-agamani/mitsukeru-server-go/utils/parser"
@@ -25,19 +24,7 @@ func CreateItemType(deps services.Dependencies) http.HandlerFunc {
 		}
 		itemType, err := deps.ItemTypeService.CreateItemType(payload.Name, payload.Description)
 		if err != nil {
-			if errors.Is(err, services.ValidatorError{}) {
-				responses.ErrResponse(w, &responses.ErrorResponse{
-					Status:  400,
-					Message: "Bad request",
-					Error:   err,
-				})
-			}
-			responses.ErrResponse(w, &responses.ErrorResponse{
-				Status:  500,
-				Message: "Internal server error",
-				Error:   err,
-			})
-			return
+			responses.HandleError(w, err)
 		}
 		responses.OkResponse(w, &responses.Response{
 			Status:  201,
@@ -57,19 +44,7 @@ func GetItemType(deps services.Dependencies) http.HandlerFunc {
 		}
 		itemType, err := deps.ItemTypeService.GetItemType(payload.Name)
 		if err != nil {
-			if errors.Is(err, services.ValidatorError{}) {
-				responses.ErrResponse(w, &responses.ErrorResponse{
-					Status:  400,
-					Message: "Bad request",
-					Error:   err,
-				})
-			}
-			responses.ErrResponse(w, &responses.ErrorResponse{
-				Status:  500,
-				Message: "Internal server error",
-				Error:   err,
-			})
-			return
+			responses.HandleError(w, err)
 		}
 		responses.OkResponse(w, &responses.Response{
 			Status:  200,
@@ -82,18 +57,7 @@ func ListItemType(deps services.Dependencies) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		itemTypes, err := deps.ItemTypeService.ListItemType()
 		if err != nil {
-			if errors.Is(err, services.ValidatorError{}) {
-				responses.ErrResponse(w, &responses.ErrorResponse{
-					Status:  400,
-					Message: "Bad request",
-					Error:   err,
-				})
-			}
-			responses.ErrResponse(w, &responses.ErrorResponse{
-				Status:  500,
-				Message: "Internal server error",
-				Error:   err,
-			})
+			responses.HandleError(w, err)
 			return
 		}
 		responses.OkResponse(w, &responses.Response{

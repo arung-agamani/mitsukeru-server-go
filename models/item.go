@@ -16,16 +16,18 @@ type Item struct {
 
 type LostItem struct {
 	Item
-	ReporterName    string `json:"reporterName"`
-	ReporterContact string `json:"reporterContact"`
-	Returned        bool   `json:"returned"`
+	ReporterName    string       `json:"reporterName"`
+	ReporterContact string       `json:"reporterContact"`
+	Assets          []ImageAsset `json:"assets"`
+	Returned        bool         `json:"returned"`
 }
 
 type FoundItem struct {
 	Item
-	ReporterName    string `json:"reporterName"`
-	ReporterContact string `json:"reporterContact"`
-	Returned        bool   `json:"returned"`
+	ReporterName    string       `json:"reporterName"`
+	ReporterContact string       `json:"reporterContact"`
+	Assets          []ImageAsset `json:"assets"`
+	Returned        bool         `json:"returned"`
 }
 
 type DepositItem struct {
