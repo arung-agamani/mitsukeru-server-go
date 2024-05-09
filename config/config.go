@@ -11,6 +11,8 @@ type Config struct {
 	Environment string
 	Version     string
 	DbConfig    DbConfig
+	JwtSecret   string
+	AWSBucket   string
 }
 
 var AppConfig Config
@@ -25,13 +27,16 @@ func InitConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Printf("Unable to read config file: %v\n", err)
 	}
-
+	checkConfigKey("AWS_ACCESS_KEY_ID", true)
+	checkConfigKey("AWS_SECRET_ACCESS_KEY", true)
+	checkConfigKey("AWS_BUCKET", true)
 	AppConfig = Config{
 		AppName:     GetAppName(),
 		Port:        GetPort(),
 		Environment: GetEnvironment(),
 		Version:     GetVersion(),
 		DbConfig:    NewDbConfig(),
+		AWSBucket:   viper.GetString("AWS_BUCKET"),
 	}
 
 }
@@ -53,6 +58,11 @@ func GetAppName() string {
 func GetVersion() string {
 	checkConfigKey("VERSION", false)
 	return getStringValueOrDefault("VERSION", "0.0.1")
+}
+
+func GetJwtSecret() string {
+	checkConfigKey("JWT_SECRET", true)
+	return viper.GetString("JWT_SECRET")
 }
 
 func checkConfigKey(key string, mandatory bool) {

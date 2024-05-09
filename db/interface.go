@@ -25,12 +25,6 @@ func InitDb() {
 		break
 	case "postgres":
 		dbconfig := config.AppConfig.DbConfig
-		//connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-		//	dbconfig.DatabaseUser,
-		//	dbconfig.DatabasePass,
-		//	dbconfig.DatabaseLink,
-		//	dbconfig.DatabasePort,
-		//	dbconfig.DatabaseName)
 		gormDb, err := gorm.Open(postgres.New(postgres.Config{
 			DSN: fmt.Sprintf("user=%s password=%s database=%s host=%s port=%s",
 				dbconfig.DatabaseUser,
@@ -54,9 +48,20 @@ func InitDb() {
 }
 
 func AutoMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(&models.LostItem{}, &models.FoundItem{}, &models.Event{})
+	err := db.AutoMigrate(
+		&models.ItemType{},
+		&models.LostItem{},
+		&models.Event{},
+		&models.User{},
+		&models.UserEventRelation{},
+		&models.ImageAsset{})
 	if err != nil {
 		logger.Errorf("Error when migrating db model")
+		logger.Error(err)
+	}
+	err = db.SetupJoinTable(&models.User{}, "Events", &models.UserEventRelation{})
+	if err != nil {
+		logger.Errorf("Error when setting up join table")
 		logger.Error(err)
 	}
 }
@@ -64,6 +69,9 @@ func AutoMigrate(db *gorm.DB) {
 func GetDB() *gorm.DB { return db }
 
 func HandleError(err error) (bool, string) {
+	if err == nil {
+		return true, ""
+	}
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		return false, "Record not found"

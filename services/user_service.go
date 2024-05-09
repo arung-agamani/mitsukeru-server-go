@@ -49,8 +49,16 @@ type ValidatorError struct {
 	FieldErrors []validator.FieldError
 }
 
+type UserAlreadyExistError struct {
+	ErrorMessage string
+}
+
 func (v ValidatorError) Error() string {
 	return "Error on validation"
+}
+
+func (u UserAlreadyExistError) Error() string {
+	return u.ErrorMessage
 }
 
 func NewUserService() UserService {

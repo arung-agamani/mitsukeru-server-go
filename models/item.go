@@ -10,24 +10,19 @@ type Item struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	ItemType    ItemType  `json:"itemType"`
-	Event       Event     `json:"event"`
+	ItemType    ItemType  `json:"-" gorm:"references:Name"`
+	ItemTypeID  string
+	Event       Event `json:"-"`
+	EventID     uuid.UUID
 }
 
 type LostItem struct {
 	Item
-	ReporterName    string       `json:"reporterName"`
-	ReporterContact string       `json:"reporterContact"`
-	Assets          []ImageAsset `json:"assets"`
-	Returned        bool         `json:"returned"`
-}
-
-type FoundItem struct {
-	Item
-	ReporterName    string       `json:"reporterName"`
-	ReporterContact string       `json:"reporterContact"`
-	Assets          []ImageAsset `json:"assets"`
-	Returned        bool         `json:"returned"`
+	Type            string `json:"type"`
+	ReporterName    string `json:"reporterName"`
+	ReporterContact string `json:"reporterContact"`
+	Asset           string `json:"asset"`
+	Returned        bool   `json:"returned"`
 }
 
 type DepositItem struct {
@@ -37,6 +32,7 @@ type DepositItem struct {
 	SlotNumber   int    `json:"slotNumber"`
 }
 
-func NewItem() Item           { return Item{} }
-func NewLostItem() LostItem   { return LostItem{} }
-func NewFoundItem() FoundItem { return FoundItem{} }
+func NewItem() Item         { return Item{} }
+func NewLostItem() LostItem { return LostItem{} }
+
+//func NewFoundItem() FoundItem { return FoundItem{} }

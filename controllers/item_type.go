@@ -9,11 +9,11 @@ import (
 )
 
 type CreateItemTypePayload struct {
-	Name        string `json:"name" validate:"required,alphanum"`
+	Name        string `json:"name" validate:"required,ascii"`
 	Description string `json:"description" validate:"required,max=256"`
 }
 type GetItemTypePayload struct {
-	Name string `json:"name" validate:"required,alphanum"`
+	Name string `json:"name" validate:"required,ascii"`
 }
 
 func CreateItemType(deps services.Dependencies) http.HandlerFunc {

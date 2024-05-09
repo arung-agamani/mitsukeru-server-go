@@ -6,6 +6,7 @@ import (
 	"github.com/arung-agamani/mitsukeru-server-go/db"
 	"github.com/arung-agamani/mitsukeru-server-go/models"
 	"github.com/arung-agamani/mitsukeru-server-go/responses"
+	"github.com/arung-agamani/mitsukeru-server-go/services"
 	"github.com/arung-agamani/mitsukeru-server-go/utils/logger"
 	"github.com/arung-agamani/mitsukeru-server-go/utils/parser"
 	"github.com/google/uuid"
@@ -32,6 +33,7 @@ type DeleteEventRequestPayload struct {
 }
 
 type GetEventResponsePayload struct {
+	ID          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	StartDate   time.Time `json:"startDate"`
@@ -133,6 +135,22 @@ func DeleteEventHandler() http.HandlerFunc {
 	}
 }
 
+func ListEventHandler(deps services.Dependencies) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		events, err := deps.EventService.ListEvent()
+		if err != nil {
+			responses.HandleError(w, err)
+			return
+		}
+		responses.OkResponse(w, &responses.Response{
+			Status:  200,
+			Message: "Fetched list of events",
+			Data:    events,
+		})
+		return
+	}
+}
+
 func GetEventHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -162,6 +180,7 @@ func GetEventHandler() http.HandlerFunc {
 			return
 		}
 		res := GetEventResponsePayload{
+			ID:          event.ID,
 			Name:        event.Name,
 			Description: event.Description,
 			StartDate:   event.StartDate,

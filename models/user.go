@@ -12,4 +12,5 @@ type User struct {
 	DisplayName string    `json:"displayName" validate:"max=64"`
 	Bio         string    `json:"bio" validate:"max=256"`
 	Password    string    `json:"password" validate:"required,min=8,max=32,alphanumunicode"`
+	Events      []Event   `gorm:"many2many:user_event_relations;"`
 }
